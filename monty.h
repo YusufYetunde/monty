@@ -9,12 +9,14 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
  * @prev: points to the previous element of the stack (or queue)
  * @next: points to the next element of the stack (or queue)
- * Description: Finding the LIFO
+ * Description: doubly linked list node structure
  */
 typedef struct stack_s
 {
@@ -23,80 +25,46 @@ typedef struct stack_s
 	struct stack_s *next;
 } stack_t;
 
-typedef void (*instruction_fn)(stack_t **);
+
 
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
- * @fn: function to handle the opcode
+ * @f: function to handle the opcode
  * Description: opcode and its function
  */
 typedef struct instruction_s
 {
 	char *opcode;
-	instruction_fn fn;
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/**
- * enum stack_mode_n - stack mode enumeration
- * @LIFO: operate as a stack
- * @FIFO: operate as a queue
- */
-typedef enum stack_mode_n
-{
-	LIFO = 0,
-	FIFO = 1
-} stack_mode_t;
 
-/**
- * struct op_env_s - operation environment
- * @sp: top of the stack
- * @argv: argument vector
- * @line: line buffer
- * @linesz: line buffer size
- * @lineno: line number
- * @mode: stack operation mode
- */
-typedef struct op_env_s
-{
-	stack_t *sp;
-	char **argv;
-	char *line;
-	size_t linesz;
-	size_t lineno;
-	stack_mode_t mode;
-} op_env_t;
+extern FILE *file;
+FILE *file;
 
-extern op_env_t op_env;
+void (*operator_function)(stack_t **, unsigned int);
+void (*go(char *op_f, unsigned int l, stack_t **s))(stack_t**, unsigned int);
 
-instruction_fn get_instruction_fn(const char *opcode);
 
-void op_add(stack_t **sp);
-void op_div(stack_t **sp);
-void op_mod(stack_t **sp);
-void op_mul(stack_t **sp);
-void op_nop(stack_t **sp);
-void op_pall(stack_t **sp);
-void op_pchar(stack_t **sp);
-void op_pint(stack_t **sp);
-void op_pop(stack_t **sp);
-void op_pstr(stack_t **sp);
-void op_push(stack_t **sp);
-void op_queue(stack_t **sp);
-void op_rotl(stack_t **sp);
-void op_rotr(stack_t **sp);
-void op_stack(stack_t **sp);
-void op_sub(stack_t **sp);
-void op_swap(stack_t **sp);
+void get_push(stack_t **stack, unsigned int line_number, char *temp);
+void get_pall(stack_t **stack, unsigned int line_number);
+void get_pint(stack_t **stack, unsigned int line_number);
+void get_pop(stack_t **stack, unsigned int line_number);
+void get_swap(stack_t **stack, unsigned int line_number);
+void get_add(stack_t **stack, unsigned int line_number);
+void get_nop(stack_t **stack, unsigned int line_number);
+void get_sub(stack_t **stack, unsigned int line_number);
+void get_div(stack_t **stack, unsigned int line_number);
+void get_mul(stack_t **stack, unsigned int line_number);
+void get_mod(stack_t **stack, unsigned int line_number);
+void get_rotl(stack_t **stack, unsigned int line_number);
+void get_pchar(stack_t **stack, unsigned int line_number);
+void get_rotr(stack_t **stack, unsigned int line_number);
+void get_pstr(stack_t **stack, unsigned int line_number);
 
-char **tokenize(char *str);
-size_t count_tokens(const char *str);
+void get_free(stack_t *stack);
+int _isdigit(char *str);
 
-void free_op_env(void);
-void free_stack(stack_t **sp);
 
-void pfailure(const char *fmt, ...);
-
-int isinteger(const char *str);
-
-#endif
+#endif /* MONTY_H */

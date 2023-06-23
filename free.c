@@ -1,13 +1,15 @@
 #include "monty.h"
 
 /**
- * free_op_env - clear stack operation environment
+ * get_free - Free stack
+ * @stack: Stack pointer
+ * Return: Void
  */
-void free_op_env(void)
+void get_free(stack_t *stack)
 {
-	free_stack(&op_env.sp);
-	free(op_env.argv);
-	free(op_env.line);
-	op_env.argv = NULL;
-	op_env.line = NULL;
+	if (stack)
+	{
+		get_free(stack->next);
+		free(stack);
+	}
 }
